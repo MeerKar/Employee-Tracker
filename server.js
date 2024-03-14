@@ -3,23 +3,19 @@ const inquirer = require("inquirer");
 const mysql = require("mysql2");
 require("dotenv").config();
 const consoleTable = require("console.table");
-// const app = express();
-// const PORT = process.env.PORT || 3001;
+
 const host = process.env.DB_HOST;
 const user = process.env.DB_USER;
 const password = process.env.DB_PASSWORD;
 const database = process.env.DB_NAME;
-console.log(host);
-console.log(user);
-console.log(password);
-console.log(database);
+
+// Connect to database
 
 const db = mysql.createConnection({
   host: host,
   user: user,
   password: password,
   database: database,
-  // Connect to database
 });
 
 console.log(`Connected to the employees_db database.`);
@@ -85,8 +81,8 @@ function Question() {
 
 // Viewing
 function viewDepartments() {
-  const sql = `SELECT department.id, department.name AS Department FROM department;`;
-  db.query(sql, (err, res) => {
+  const dbm = `SELECT department.id, department.name AS Department FROM department;`;
+  db.query(dbm, (err, res) => {
     if (err) {
       console.log(err);
       return;
@@ -97,8 +93,8 @@ function viewDepartments() {
 }
 
 function viewRoles() {
-  const sql = `SELECT role.id, role.title AS role, role.salary, department.name AS department FROM role INNER JOIN department ON (department.id = role.department_id);`;
-  db.query(sql, (err, res) => {
+  const dbm = `SELECT role.id, role.title AS role, role.salary, department.name AS department FROM role INNER JOIN department ON (department.id = role.department_id);`;
+  db.query(dbm, (err, res) => {
     if (err) {
       console.log(err);
       return;
@@ -109,8 +105,8 @@ function viewRoles() {
 }
 
 function viewEmployees() {
-  const sql = `SELECT employee.id, employee.first_name, employee.last_name, role.title AS role, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN employee manager on manager.id = employee.manager_id INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY employee.id;`;
-  db.query(sql, (err, res) => {
+  const dbm = `SELECT employee.id, employee.first_name, employee.last_name, role.title AS role, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN employee manager on manager.id = employee.manager_id INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY employee.id;`;
+  db.query(dbm, (err, res) => {
     if (err) {
       console.log(err);
       return;
@@ -127,12 +123,12 @@ function addDepartment() {
       {
         type: "input",
         name: "department",
-        message: "What is the name of the department?",
+        message: "What is the name of the department you want to add?",
       },
     ])
     .then((answer) => {
-      const sql = `INSERT INTO department(name) VALUES('${answer.department}');`;
-      db.query(sql, (err, res) => {
+      const dbm = `INSERT INTO department(name) VALUES('${answer.department}');`;
+      db.query(dbm, (err, res) => {
         if (err) {
           console.log(err);
           return;
@@ -144,8 +140,8 @@ function addDepartment() {
 }
 
 function addRole() {
-  const sql2 = `SELECT * FROM department`;
-  db.query(sql2, (error, response) => {
+  const db2 = `SELECT * FROM department`;
+  db.query(db2, (error, response) => {
     departmentList = response.map((departments) => ({
       name: departments.name,
       value: departments.id,
@@ -170,8 +166,8 @@ function addRole() {
         },
       ])
       .then((answers) => {
-        const sql = `INSERT INTO role SET title='${answers.title}', salary= ${answers.salary}, department_id= ${answers.department};`;
-        db.query(sql, (err, res) => {
+        const dbm = `INSERT INTO role SET title='${answers.title}', salary= ${answers.salary}, department_id= ${answers.department};`;
+        db.query(dbm, (err, res) => {
           if (err) {
             console.log(err);
             return;
@@ -184,15 +180,15 @@ function addRole() {
 }
 
 function addEmployee() {
-  const sql2 = `SELECT * FROM employee`;
-  db.query(sql2, (error, response) => {
+  const db2 = `SELECT * FROM employee`;
+  db.query(db2, (error, response) => {
     employeeList = response.map((employees) => ({
       name: employees.first_name.concat(" ", employees.last_name),
       value: employees.id,
     }));
 
-    const sql3 = `SELECT * FROM role`;
-    db.query(sql3, (error, response) => {
+    const db3 = `SELECT * FROM role`;
+    db.query(db3, (error, response) => {
       roleList = response.map((role) => ({
         name: role.title,
         value: role.id,
@@ -223,8 +219,8 @@ function addEmployee() {
           },
         ])
         .then((answers) => {
-          const sql = `INSERT INTO employee SET first_name='${answers.first}', last_name= '${answers.last}', role_id= ${answers.role}, manager_id=${answers.manager};`;
-          db.query(sql, (err, res) => {
+          const dbm = `INSERT INTO employee SET first_name='${answers.first}', last_name= '${answers.last}', role_id= ${answers.role}, manager_id=${answers.manager};`;
+          db.query(dbm, (err, res) => {
             if (err) {
               console.log(err);
               return;
@@ -239,16 +235,43 @@ function addEmployee() {
   });
 }
 
+// // Deleting
+// function deleteDepartment() {
+//   inquirer
+//     .prompt([
+//       {
+//         type: "input",
+//         name: "departmentId",
+//         message: "What is the ID of the department you want to delete?",
+//       },
+//     ])
+//     .then((answer) => {
+//       const departmentId = parseInt(answer.departmentId);
+
+//       const db4 = `DELETE FROM department WHERE id = ?`;
+//       db.query(sql, [departmentId], (err, res) => {
+//         if (err) {
+//           console.log(err);
+//           return;
+//         }
+//         console.log(
+//           `Deleted department with ID ${departmentId} from the database`
+//         );
+//         Question();
+//       });
+//     });
+// }
+
 // Updating
 function updateRole() {
-  const sql2 = `SELECT * FROM employee`;
-  db.query(sql2, (error, response) => {
+  const db2 = `SELECT * FROM employee`;
+  db.query(db2, (error, response) => {
     employeeList = response.map((employees) => ({
       name: employees.first_name.concat(" ", employees.last_name),
       value: employees.id,
     }));
-    const sql3 = `SELECT * FROM role`;
-    db.query(sql3, (error, response) => {
+    const db3 = `SELECT * FROM role`;
+    db.query(db3, (error, response) => {
       roleList = response.map((role) => ({
         name: role.title,
         value: role.id,
@@ -275,8 +298,8 @@ function updateRole() {
           },
         ])
         .then((answers) => {
-          const sql = `UPDATE employee SET role_id= ${answers.role}, manager_id=${answers.manager} WHERE id =${answers.employee};`;
-          db.query(sql, (err, res) => {
+          const dbm = `UPDATE employee SET role_id= ${answers.role}, manager_id=${answers.manager} WHERE id =${answers.employee};`;
+          db.query(dbm, (err, res) => {
             if (err) {
               console.log(err);
               return;
