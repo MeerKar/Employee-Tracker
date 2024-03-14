@@ -39,8 +39,11 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 The following video shows an example of the application being used from the command line:
 
+[Untitled_ Mar 14, 2024 3_34 PM.webm](https://github.com/MeerKar/Employee-Tracker/assets/116701851/4d86376f-758c-43d5-a63d-3016df5c0a58)
+
 #Credits:
 
 Finally without the support of my kind and patient tutor Charles,
 John Young (Instructor)
-Nick Gambino(TA)
+Nick Gambino(TA) 
+it would have been a tragedy :)!
