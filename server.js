@@ -4,14 +4,22 @@ const mysql = require("mysql2");
 require("dotenv").config();
 const consoleTable = require("console.table");
 // const app = express();
-const PORT = process.env.PORT || 3001;
+// const PORT = process.env.PORT || 3001;
+const host = process.env.DB_HOST;
+const user = process.env.DB_USER;
+const password = process.env.DB_PASSWORD;
+const database = process.env.DB_NAME;
+console.log(host);
+console.log(user);
+console.log(password);
+console.log(database);
 
-// Connect to database
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: host,
+  user: user,
+  password: password,
+  database: database,
+  // Connect to database
 });
 
 console.log(`Connected to the employees_db database.`);
