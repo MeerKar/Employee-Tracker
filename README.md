@@ -44,4 +44,3 @@ The following video shows an example of the application being used from the comm
 Finally without the support of my kind and patient tutor Charles,
 John Young (Instructor)
 Nick Gambino(TA)
-it would have been a tragedy :)!
