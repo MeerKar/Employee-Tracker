@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "asciiart-logo": "^0.2.6",
+     "dotenv": "^8.2.0",
     "inquirer": "8.2.4",
     "mysql2": "^2.1.0"
   }
