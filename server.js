@@ -2,7 +2,6 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 require("dotenv").config();
-const consoleTable = require("console.table");
 
 const host = process.env.DB_HOST;
 const user = process.env.DB_USER;
@@ -128,7 +127,7 @@ function addDepartment() {
     ])
     .then((answer) => {
       const dbm = `INSERT INTO department(name) VALUES('${answer.department}');`;
-      db.query(dbm, (err, results) => {
+      db.query(dbm, [answer.department], (err, results) => {
         if (err) {
           console.log(err);
           return;
@@ -142,12 +141,17 @@ function addDepartment() {
 
 function addRole() {
   const db2 = `SELECT * FROM department`;
-  db.query(db2, (error, response) => {
-    departmentList = response.map((departments) => ({
-      name: departments.name,
-      value: departments.id,
+  db.query(db2, (err, response) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    const departmentList = response.map((department) => ({
+      name: department.name,
+      value: department.id,
     }));
-    return inquirer
+
+    inquirer
       .prompt([
         {
           type: "input",
@@ -162,40 +166,53 @@ function addRole() {
         {
           type: "list",
           name: "department",
-          message: "Which Department does the role belong to?",
+          message: "Which department does the role belong to?",
           choices: departmentList,
         },
       ])
       .then((answers) => {
-        const dbm = `INSERT INTO role SET title='${answers.title}', salary= ${answers.salary}, department_id= ${answers.department};`;
-        db.query(dbm, (err, results) => {
-          if (err) {
-            console.log(err);
-            return;
+        const dbm = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?);`;
+        db.query(
+          dbm,
+          [answers.title, answers.salary, answers.department],
+          (err, results) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            console.log(`Added ${answers.title} to the database`);
+            console.table(results);
+            Question();
           }
-          console.log("Added " + answers.title + " to the database");
-          console.table(results);
-          Question();
-        });
+        );
       });
   });
 }
 
 function addEmployee() {
-  const db2 = `SELECT * FROM employee`;
-  db.query(db2, (error, response) => {
-    employeeList = response.map((employees) => ({
-      name: employees.first_name.concat(" ", employees.last_name),
-      value: employees.id,
+  const db2 = `SELECT * FROM role`;
+  db.query(db2, (error, roles) => {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    const roleList = roles.map((role) => ({
+      name: role.title,
+      value: role.id,
     }));
 
-    const db3 = `SELECT * FROM role`;
-    db.query(db3, (error, response) => {
-      roleList = response.map((role) => ({
-        name: role.title,
-        value: role.id,
+    const db3 = `SELECT * FROM employee`;
+    db.query(db3, (error, employees) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      const employeeList = employees.map((employee) => ({
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.id,
       }));
-      return inquirer
+
+      inquirer
         .prompt([
           {
             type: "input",
@@ -221,18 +238,22 @@ function addEmployee() {
           },
         ])
         .then((answers) => {
-          const dbm = `INSERT INTO employee SET first_name='${answers.first}', last_name= '${answers.last}', role_id= ${answers.role}, manager_id=${answers.manager};`;
-          db.query(dbm, (err, results) => {
-            if (err) {
-              console.log(err);
-              return;
+          const dbm = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?);`;
+          db.query(
+            dbm,
+            [answers.first, answers.last, answers.role, answers.manager],
+            (err, results) => {
+              if (err) {
+                console.log(err);
+                return;
+              }
+              console.log(
+                `Added ${answers.first} ${answers.last} to the database`
+              );
+              console.table(results);
+              Question();
             }
-            console.log(
-              "Added " + answers.first + " " + answers.last + " to the database"
-            );
-            console.table(results);
-            Question();
-          });
+          );
         });
     });
   });
