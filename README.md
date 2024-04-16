@@ -39,6 +39,19 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 The following video shows an example of the application being used from the command line:
 
+
+
+
+<img width="501" alt="image" src="https://github.com/MeerKar/Employee-Tracker/assets/116701851/4bdce6af-30dc-4e53-87a0-1e3e524f8990">
+
+<img width="497" alt="image" src="https://github.com/MeerKar/Employee-Tracker/assets/116701851/4dc595da-a068-49ef-821a-eb25d5383914">
+
+
+<img width="639" alt="image" src="https://github.com/MeerKar/Employee-Tracker/assets/116701851/5e6ef8cc-181a-4c96-9965-78950efa2052">
+
+
+
+
 #Credits:
 
 Finally without the support of my kind and patient tutor Charles,
