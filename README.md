@@ -40,6 +40,7 @@ THEN I am prompted to select an employee to update and their new role and this i
 The following video shows an example of the application being used from the command line:
 
 
+[Untitled_ Apr 17, 2024 6_02 PM.webm](https://github.com/MeerKar/Employee-Tracker/assets/116701851/6534c3f7-5b26-462d-a322-2fb83707fecb)
 
 
 <img width="501" alt="image" src="https://github.com/MeerKar/Employee-Tracker/assets/116701851/4bdce6af-30dc-4e53-87a0-1e3e524f8990">
